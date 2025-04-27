@@ -21,6 +21,15 @@ def run_bdd_tests():
     else:
         st.error("Some BDD tests failed. Check the output above.")
 
+# Function to run Property-Based tests
+def run_property_tests():
+    result = subprocess.run(["pytest", "test/test_property.py"], capture_output=True, text=True)
+    st.text(result.stdout)
+    if result.returncode == 0:
+        st.success("Property-based tests passed!")
+    else:
+        st.error("Some property-based tests failed. Check the output above.")
+
 # Main Streamlit app
 def main():
     st.title("To-Do Application")
@@ -28,8 +37,12 @@ def main():
     # Buttons for tests
     if st.button("Run Basic Tests"):
         run_basic_tests()
+        
     if st.button("Run BDD Tests"):
         run_bdd_tests()
+
+    if st.button("Run Property-Based Tests"):
+        run_property_tests()
 
     # Load existing tasks
     tasks = load_tasks()  # Ensure tasks are loaded properly from storage
