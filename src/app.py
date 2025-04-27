@@ -1,18 +1,30 @@
 import streamlit as st
 import pandas as pd
+import subprocess
 from datetime import datetime
 from tasks import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category
+
+def run_basic_tests():
+    result = subprocess.run(["pytest", "test/test_basic.py"], capture_output=True, text=True)
+    st.text(result.stdout)
+    if result.returncode == 0:
+        st.success("Basic tests passed!")
+    else:
+        st.error("Some basic tests failed. Check output above.")
 
 def main():
     st.title("To-Do Application")
     
+    # Basic Test Button
+    if st.button("Run Basic Tests"):
+        run_basic_tests()
+
     # Load existing tasks
     tasks = load_tasks()
     
     # Sidebar for adding new tasks
     st.sidebar.header("Add New Task")
     
-    # Task creation form
     with st.sidebar.form("new_task_form"):
         task_title = st.text_input("Task Title")
         task_description = st.text_area("Description")
@@ -39,7 +51,6 @@ def main():
     # Main area to display tasks
     st.header("Your Tasks")
     
-    # Filter options
     col1, col2 = st.columns(2)
     with col1:
         filter_category = st.selectbox("Filter by Category", ["All"] + list(set([task["category"] for task in tasks])))
