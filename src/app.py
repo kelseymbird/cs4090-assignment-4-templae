@@ -12,12 +12,24 @@ def run_basic_tests():
     else:
         st.error("Some basic tests failed. Check output above.")
 
+def run_bdd_tests():
+    result = subprocess.run(["behave", "test/features"], capture_output=True, text=True)
+    st.text(result.stdout)  # Display the output of the BDD tests
+    if result.returncode == 0:
+        st.success("BDD tests passed!")
+    else:
+        st.error("Some BDD tests failed. Check the output above.")
+
 def main():
     st.title("To-Do Application")
     
     # Basic Test Button
     if st.button("Run Basic Tests"):
         run_basic_tests()
+
+    # Add a button to trigger BDD tests
+    if st.button("Run BDD Tests"):
+        run_bdd_tests()
 
     # Load existing tasks
     tasks = load_tasks()
