@@ -29,7 +29,43 @@ def run_property_tests():
         st.success("Property-based tests passed!")
     else:
         st.error("Some property-based tests failed. Check the output above.")
+        
+# Function to run Pytest with coverage reporting
+def run_with_coverage():
+    result = subprocess.run(["pytest", "--cov", "tasks", "test/test_basic.py"], capture_output=True, text=True)
+    st.text(result.stdout)
+    if result.returncode == 0:
+        st.success("Tests passed with coverage!")
+    else:
+        st.error("Some tests failed. Check the output above.")
 
+# Function to run parameterized tests
+def run_parameterized_tests():
+    result = subprocess.run(["pytest", "test/test_parameterized.py"], capture_output=True, text=True)
+    st.text(result.stdout)
+    if result.returncode == 0:
+        st.success("Parameterized tests passed!")
+    else:
+        st.error("Some parameterized tests failed. Check the output above.")
+
+# Function to run tests with mocking
+def run_mocked_tests():
+    result = subprocess.run(["pytest", "test/test_mocking.py"], capture_output=True, text=True)
+    st.text(result.stdout)
+    if result.returncode == 0:
+        st.success("Mocking tests passed!")
+    else:
+        st.error("Some mocking tests failed. Check the output above.")
+
+# Function to generate HTML report
+def generate_html_report():
+    result = subprocess.run(["pytest", "--html=report.html", "test/test_basic.py"], capture_output=True, text=True)
+    st.text(result.stdout)
+    if result.returncode == 0:
+        st.success("HTML report generated successfully!")
+    else:
+        st.error("Failed to generate HTML report. Check the output above.")
+        
 # Main Streamlit app
 def main():
     st.title("To-Do Application")
@@ -43,6 +79,18 @@ def main():
 
     if st.button("Run Property-Based Tests"):
         run_property_tests()
+
+    if st.button("Run Tests with Coverage"):
+        run_with_coverage()
+
+    if st.button("Run Parameterized Tests"):
+        run_parameterized_tests()
+
+    if st.button("Run Mocking Tests"):
+        run_mocked_tests()
+
+    if st.button("Generate HTML Report"):
+        generate_html_report()
 
     # Load existing tasks
     tasks = load_tasks()  # Ensure tasks are loaded properly from storage
