@@ -1,9 +1,9 @@
 import streamlit as st
-import pandas as pd
-import subprocess
 from datetime import datetime
+import subprocess
 from tasks import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category
 
+# Function to run basic tests
 def run_basic_tests():
     result = subprocess.run(["pytest", "test/test_basic.py"], capture_output=True, text=True)
     st.text(result.stdout)
@@ -12,6 +12,7 @@ def run_basic_tests():
     else:
         st.error("Some basic tests failed. Check output above.")
 
+# Function to run BDD tests
 def run_bdd_tests():
     result = subprocess.run(["behave", "test/features"], capture_output=True, text=True)
     st.text(result.stdout)  # Display the output of the BDD tests
@@ -20,23 +21,21 @@ def run_bdd_tests():
     else:
         st.error("Some BDD tests failed. Check the output above.")
 
+# Main Streamlit app
 def main():
     st.title("To-Do Application")
     
-    # Basic Test Button
+    # Buttons for tests
     if st.button("Run Basic Tests"):
         run_basic_tests()
-
-    # Add a button to trigger BDD tests
     if st.button("Run BDD Tests"):
         run_bdd_tests()
 
     # Load existing tasks
-    tasks = load_tasks()
-    
+    tasks = load_tasks()  # Ensure tasks are loaded properly from storage
+
     # Sidebar for adding new tasks
     st.sidebar.header("Add New Task")
-    
     with st.sidebar.form("new_task_form"):
         task_title = st.text_input("Task Title")
         task_description = st.text_area("Description")
@@ -45,9 +44,10 @@ def main():
         task_due_date = st.date_input("Due Date")
         submit_button = st.form_submit_button("Add Task")
         
+        # Add the new task when the form is submitted
         if submit_button and task_title:
             new_task = {
-                "id": len(tasks) + 1,
+                "id": len(tasks) + 1,  # Generate a unique ID for the task
                 "title": task_title,
                 "description": task_description,
                 "priority": task_priority,
@@ -59,11 +59,12 @@ def main():
             tasks.append(new_task)
             save_tasks(tasks)
             st.sidebar.success("Task added successfully!")
-    
+
     # Main area to display tasks
     st.header("Your Tasks")
-    
     col1, col2 = st.columns(2)
+    
+    # Filters for tasks
     with col1:
         filter_category = st.selectbox("Filter by Category", ["All"] + list(set([task["category"] for task in tasks])))
     with col2:
@@ -71,7 +72,7 @@ def main():
     
     show_completed = st.checkbox("Show Completed Tasks")
     
-    # Apply filters
+    # Apply filters to tasks
     filtered_tasks = tasks.copy()
     if filter_category != "All":
         filtered_tasks = filter_tasks_by_category(filtered_tasks, filter_category)
@@ -80,27 +81,31 @@ def main():
     if not show_completed:
         filtered_tasks = [task for task in filtered_tasks if not task["completed"]]
     
-    # Display tasks
+    # Display tasks with actions
     for task in filtered_tasks:
         col1, col2 = st.columns([4, 1])
         with col1:
             if task["completed"]:
-                st.markdown(f"~~**{task['title']}**~~")
+                st.markdown(f"~~**{task['title']}**~~")  # Strikethrough for completed tasks
             else:
                 st.markdown(f"**{task['title']}**")
             st.write(task["description"])
             st.caption(f"Due: {task['due_date']} | Priority: {task['priority']} | Category: {task['category']}")
         with col2:
+            # Button to mark task as completed or undo it
             if st.button("Complete" if not task["completed"] else "Undo", key=f"complete_{task['id']}"):
                 for t in tasks:
                     if t["id"] == task["id"]:
                         t["completed"] = not t["completed"]
-                        save_tasks(tasks)
-                        st.rerun()
-            if st.button("Delete", key=f"delete_{task['id']}"):
-                tasks = [t for t in tasks if t["id"] != task["id"]]
-                save_tasks(tasks)
-                st.rerun()
+                        save_tasks(tasks)  # Save updated tasks list
+                        st.experimental_rerun()  # Refresh the app to update UI
 
+            # Button to delete task
+            if st.button("Delete", key=f"delete_{task['id']}"):
+                tasks = [t for t in tasks if t["id"] != task["id"]]  # Remove the task
+                save_tasks(tasks)  # Save updated tasks list
+                st.experimental_rerun()  # Refresh the app to update UI
+
+# Ensure tasks file and helper functions are properly set up
 if __name__ == "__main__":
     main()
