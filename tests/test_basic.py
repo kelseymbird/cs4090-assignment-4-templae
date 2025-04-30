@@ -1,13 +1,13 @@
 import pytest
-from tasks import load_tasks, save_tasks, generate_unique_id, filter_tasks_by_priority, filter_tasks_by_category
+from src.tasks import load_tasks, save_tasks, generate_unique_id, filter_tasks_by_priority, filter_tasks_by_category
 
 def test_load_tasks_empty(tmp_path):
-    file_path = tmp_path / "tasks.json"
+    file_path = str(tmp_path / "tasks.json")  # <-- cast to str
     tasks = load_tasks(file_path)
     assert tasks == []
 
 def test_save_and_load_tasks(tmp_path):
-    file_path = tmp_path / "tasks.json"
+    file_path = str(tmp_path / "tasks.json")  # <-- cast to str
     data = [{"id": 1, "title": "Test Task", "completed": False}]
     save_tasks(data, file_path)
     loaded = load_tasks(file_path)

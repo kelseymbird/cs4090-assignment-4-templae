@@ -70,28 +70,6 @@ def generate_html_report():
 def main():
     st.title("To-Do Application")
     
-    # Buttons for tests
-    if st.button("Run Basic Tests"):
-        run_basic_tests()
-        
-    if st.button("Run BDD Tests"):
-        run_bdd_tests()
-
-    if st.button("Run Property-Based Tests"):
-        run_property_tests()
-
-    if st.button("Run Tests with Coverage"):
-        run_with_coverage()
-
-    if st.button("Run Parameterized Tests"):
-        run_parameterized_tests()
-
-    if st.button("Run Mocking Tests"):
-        run_mocked_tests()
-
-    if st.button("Generate HTML Report"):
-        generate_html_report()
-
     # Load existing tasks
     tasks = load_tasks()  # Ensure tasks are loaded properly from storage
 
@@ -159,13 +137,33 @@ def main():
                     if t["id"] == task["id"]:
                         t["completed"] = not t["completed"]
                         save_tasks(tasks)  # Save updated tasks list
-                        st.experimental_rerun()  # Refresh the app to update UI
 
             # Button to delete task
             if st.button("Delete", key=f"delete_{task['id']}"):
                 tasks = [t for t in tasks if t["id"] != task["id"]]  # Remove the task
                 save_tasks(tasks)  # Save updated tasks list
-                st.experimental_rerun()  # Refresh the app to update UI
+
+    # Buttons for tests
+    if st.button("Run Basic Tests"):
+        run_basic_tests()
+        
+    if st.button("Run BDD Tests"):
+        run_bdd_tests()
+
+    if st.button("Run Property-Based Tests"):
+        run_property_tests()
+
+    if st.button("Run Tests with Coverage"):
+        run_with_coverage()
+
+    if st.button("Run Parameterized Tests"):
+        run_parameterized_tests()
+
+    if st.button("Run Mocking Tests"):
+        run_mocked_tests()
+
+    if st.button("Generate HTML Report"):
+        generate_html_report()
 
 # Ensure tasks file and helper functions are properly set up
 if __name__ == "__main__":
