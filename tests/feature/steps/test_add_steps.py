@@ -1,5 +1,8 @@
 from behave import given, when, then
-from tasks import load_tasks, save_tasks, generate_unique_id
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../src")))
+from tasks_funcs import load_tasks, save_tasks, generate_unique_id
 import streamlit as st
 
 # Initialize task list in a mock way

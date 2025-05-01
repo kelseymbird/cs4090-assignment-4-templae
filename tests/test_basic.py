@@ -1,6 +1,8 @@
 import pytest
-from src.tasks import load_tasks, save_tasks, generate_unique_id, filter_tasks_by_priority, filter_tasks_by_category
-
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../src")))
+from tasks_funcs import load_tasks, save_tasks, generate_unique_id, filter_tasks_by_priority, filter_tasks_by_category
 def test_load_tasks_empty(tmp_path):
     file_path = str(tmp_path / "tasks.json")  # <-- cast to str
     tasks = load_tasks(file_path)

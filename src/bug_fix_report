@@ -15,7 +15,7 @@ Description: Task IDs are generated using len(tasks) + 1. This does not account 
 
 Impact: This may result in duplicate task IDs, leading to incorrect behavior when toggling or deleting tasks.
 
-Recommendation: Replace with a call to a reliable ID generation function such as generate_unique_id(tasks) or use a UUID generator.
+Solution: Replace with a call to a reliable ID generation function such as generate_unique_id(tasks) or use a UUID generator.
 
 2. load_tasks() and save_tasks() Used Without Arguments
 
@@ -23,7 +23,7 @@ Description: These functions are used with no parameters, but they likely expect
 
 Impact: May raise a TypeError or fail silently depending on the implementation.
 
-Recommendation: Pass the correct path explicitly, for example: load_tasks("tasks.json").
+Solution: Pass the correct path explicitly, for example: load_tasks("tasks.json").
 
 * User Experience and Logic Issues
 3. No Feedback When Task Title Is Missing
@@ -32,7 +32,7 @@ Description: If the task form is submitted without a title, nothing is added and
 
 Impact: This creates a confusing user experience.
 
-Recommendation: Add a message like st.sidebar.warning("Task title is required") when the title field is empty.
+Solution: Add a message like st.sidebar.warning("Task title is required") when the title field is empty.
 
 4. Tasks Are Not Sorted by Due Date
 
@@ -40,7 +40,7 @@ Description: Tasks are shown in the order they were added, without sorting.
 
 Impact: This makes it harder to prioritize or view tasks efficiently.
 
-Recommendation: Add sorting using something like filtered_tasks.sort(key=lambda x: x["due_date"]).
+Solution: Add sorting using something like filtered_tasks.sort(key=lambda x: x["due_date"]).
 
 * Data Integrity and State Handling
 5. State Changes on Filtered Task List Modify the Main Task List
@@ -49,7 +49,7 @@ Description: The application performs completion toggles and deletions based on 
 
 Impact: May cause unexpected behavior or race conditions.
 
-Recommendation: Ensure that updates are based on direct access to the full list using unique IDs, not the filtered subset.
+Solution: Ensure that updates are based on direct access to the full list using unique IDs, not the filtered subset.
 
 6. No Handling for Invalid or Malformed Dates
 
@@ -57,4 +57,4 @@ Description: All due dates are formatted with .strftime(), assuming that they ar
 
 Impact: If the date format is corrupted or inconsistent in storage, this may lead to runtime exceptions.
 
-Recommendation: Implement error handling using try/except blocks or validate the input format during parsing.
+Solution: Implement error handling using try/except blocks or validate the input format during parsing.

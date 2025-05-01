@@ -2,8 +2,11 @@ import json
 import os
 from datetime import datetime
 
-# File path for task storage
-DEFAULT_TASKS_FILE = "tasks.json"
+
+# Always resolve path relative to this file's directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_TASKS_FILE = os.path.join(BASE_DIR, "tasks.json")
+
 
 def load_tasks(file_path=DEFAULT_TASKS_FILE):
     """
@@ -104,8 +107,9 @@ def search_tasks(tasks, query):
     return [
         task for task in tasks 
         if query in task.get("title", "").lower() or 
-           query in task.get("description", "").lower()
-    ]
+           query in task.get("description", "").lower() or
+           query in task.get("priority", "").lower()
+        ]
 
 def get_overdue_tasks(tasks):
     """

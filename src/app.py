@@ -1,7 +1,11 @@
 import streamlit as st
 from datetime import datetime
 import subprocess
-from tasks import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
+from tasks_funcs import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category
 
 # Function to run basic tests
 def run_basic_tests():
@@ -68,6 +72,7 @@ def generate_html_report():
         
 # Main Streamlit app
 def main():
+
     st.title("To-Do Application")
     
     # Load existing tasks
@@ -138,10 +143,13 @@ def main():
                         t["completed"] = not t["completed"]
                         save_tasks(tasks)  # Save updated tasks list
 
+                st.rerun()
+
             # Button to delete task
             if st.button("Delete", key=f"delete_{task['id']}"):
                 tasks = [t for t in tasks if t["id"] != task["id"]]  # Remove the task
                 save_tasks(tasks)  # Save updated tasks list
+                st.rerun()
 
     # Buttons for tests
     if st.button("Run Basic Tests"):

@@ -1,6 +1,9 @@
 from hypothesis import given, strategies as st
-from tasks import filter_tasks_by_priority, filter_tasks_by_category
-import tasks
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../src")))
+from tasks_funcs import filter_tasks_by_priority, filter_tasks_by_category
+import tasks_funcs
 
 # --- Property Test 1: Filter tasks by priority with various inputs ---
 
@@ -25,15 +28,14 @@ def test_filter_tasks_by_category_property(tasks_list, category):
     filtered = filter_tasks_by_category(tasks_list, category)
     assert all(task["category"] == category for task in filtered)
 
-
 # --- Property Test 3: Unique Task ID generation ---
 
-@given(st.lists(st.dictionaries(keys=st.text(), values=st.integers())))
+@given(st.lists(st.dictionaries(keys=st.just("id"), values=st.integers(), min_size=1)))
 def test_generate_unique_id_property(tasks_list):
-    new_id = tasks.generate_unique_id(tasks_list)
-    # Ensure the new ID is always greater than the max existing ID
+    new_id = tasks_funcs.generate_unique_id(tasks_list)
+    
     existing_ids = [task["id"] for task in tasks_list]
     if existing_ids:
         assert new_id > max(existing_ids)
     else:
-        assert new_id == 1  # If no tasks exist, ID should be 1
+        assert new_id == 1

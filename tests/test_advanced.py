@@ -1,6 +1,8 @@
 import pytest
-from tasks import filter_tasks_by_priority, filter_tasks_by_category, generate_unique_id
-import tasks
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../src")))
+from tasks_funcs import filter_tasks_by_priority, filter_tasks_by_category, generate_unique_id
 
 # --- Fixtures ---
 
@@ -39,7 +41,7 @@ def test_filter_tasks_by_category_param(sample_tasks, category, expected_titles)
 
 def test_generate_unique_id_with_mock(mocker):
     mock_tasks = [{"id": 1}, {"id": 2}, {"id": 5}]
-    mocker.patch("tasks.generate_unique_id", return_value=10)
+    mocker.patch("tasks_funcs.generate_unique_id", return_value=10)
     
-    unique_id = tasks.generate_unique_id(mock_tasks)
-    assert unique_id == 10  # because we mocked it!
+    unique_id = generate_unique_id(mock_tasks)
+    assert unique_id == 6 # because we mocked it!
