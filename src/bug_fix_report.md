@@ -58,3 +58,11 @@ Description: All due dates are formatted with .strftime(), assuming that they ar
 Impact: If the date format is corrupted or inconsistent in storage, this may lead to runtime exceptions.
 
 Solution: Implement error handling using try/except blocks or validate the input format during parsing.
+
+7. Rerun for completed and deleted tasks
+
+Description: The completion and deletion buttons didn't automatically reload the page, so it didn't look like the task had been delete though it had been
+
+Impact: confusing the user
+
+Solution: use 'st.rerun()' after each of the buttons is pressed to reload the page.
